@@ -1,31 +1,31 @@
 import os
-import time
 import requests
 from flask import Flask
 import threading
+import time
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
 app = Flask(__name__)
+
 @app.route('/')
 def home():
     return "FOOTYAI ONLINE"
 
 def run_web():
-    app.run(host='0.0.0.0', port=10000)
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))
 
 threading.Thread(target=run_web, daemon=True).start()
 
-def enviar(texto):
+def send(text):
     try:
         url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-        requests.post(url, json={"chat_id": CHAT_ID, "text": texto, "parse_mode": "HTML"})
-    except:
-        pass
+        requests.post(url, data={"chat_id": CHAT_ID, "text": text})
+    except Exception as e:
+        print(e)
 
-enviar("✅ FOOTYAI V100074 ONLINE\nBot conectado correctamente a Render")
+send("FOOTYAI V100074 ACTIVO ✅ - Live en Render")
 
 while True:
-    time.sleep(3600)
-    enviar("💓 FOOTYAI sigue activo")
+    time.sleep(60)
